@@ -56,7 +56,7 @@ typedef struct FrameInfo {
     unsigned char date_hours;
     unsigned char date_mins;
     unsigned char date_secs;
-    } FrameInfo;
+} FrameInfo;
 
 #define AIFF_HEADER_SIZE  54
 

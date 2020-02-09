@@ -27,7 +27,7 @@
 - (void) writeToLog:(char *)logtext {
     if (owner != NULL) {
         [owner writeToLog:logtext];
-        }
+    }
 }
 
 - (int) locateDrive {
@@ -43,7 +43,7 @@
         sprintf(errmsg, "ERR: Couldn't create a master IOKit Port(%08x)\n", kr);
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
 	
     // Create the dictionaries
     matchingDict = CFDictionaryCreateMutable ( kCFAllocatorDefault, 0,
@@ -70,7 +70,7 @@
     // handle results
     if (drive_service == 0) {
         return -1;
-    	}
+    }
 
     return 0;
 }
@@ -90,7 +90,7 @@
     if (drive_service == 0) {
         [self writeToLog:"setupInterface called with no drive"];
         return -1;
-    	}
+    }
 
     // Create the IOCFPlugIn interface so we can query it.
     err = IOCreatePlugInInterfaceForService (
@@ -115,7 +115,7 @@
         sprintf(errmsg, "QueryInterface returned %ld\n", herr);
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
 		
     // Get exclusive access to the device
     err = (*interface)->ObtainExclusiveAccess(interface);
@@ -150,14 +150,14 @@
 		(*interface)->Release(interface);
 
 		interface = NULL;
-		}
+	}
 	
 	if (plugInInterface != NULL) {
 		// Destroy plugin interface
 		IODestroyPlugInInterface(plugInInterface);
 
 		plugInInterface = NULL;
-		}
+	}
 }
 
 - (int) TestUnitReady:(int *)status withString:(char *)status_string 
@@ -184,7 +184,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
     
     // zero the senseData and CDB
     memset ( &senseData, 0, sizeof ( senseData ) );
@@ -198,14 +198,14 @@
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the timeout in the task
     err = ( *task )->SetTimeoutDuration ( task, 5000 );
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Send it!
     err = ( *task )->ExecuteTaskSync ( task, &senseData, &taskStatus, &transferCount );
@@ -214,24 +214,24 @@
         [self writeToLog:errmsg];
         ( *task )->Release ( task );
         return -1;
-        }
+    }
 				
     *status = taskStatus;
     
     // Task status is not GOOD, return  any sense string if they apply.
     if ( taskStatus == kSCSITaskStatus_GOOD ) {
         strcpy(status_string, "Ready");
-        }
+    }
     else if ( taskStatus == kSCSITaskStatus_CHECK_CONDITION ) {
 	key = *result_key = senseData.SENSE_KEY & 0x0F;
 	ASC = senseData.ADDITIONAL_SENSE_CODE;
 	ASCQ = senseData.ADDITIONAL_SENSE_CODE_QUALIFIER;
         code = *result_code = ( ( UInt16 ) ASC << 8 ) | ASCQ;
         get_sense_string(status_string, key, ASC, ASCQ, code, false);
-        }
+    }
     else {
         sprintf(status_string, "taskStatus = 0x%08x\n", taskStatus);
-        }
+    }
 	
     // Release the task interface
     ( *task )->Release ( task );
@@ -260,7 +260,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
 				
     // Zero the buffer.
     memset(bufPtr, 0, sizeof(SCSICmd_INQUIRY_StandardData));
@@ -271,7 +271,7 @@
     if ( range == NULL ) {
         sprintf(errmsg, "ERROR Mallocing IOVirtualRange");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // zero the senseData and CDB
     memset(&senseData, 0, sizeof (senseData));
@@ -292,7 +292,7 @@
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the scatter-gather entry in the task
     err = (*task)->SetScatterGatherEntries(task, range, 1,
@@ -301,50 +301,50 @@
     if  (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting SG Entries");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the timeout in the task
     err = (*task)->SetTimeoutDuration(task, 10000);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Send it!
     err =  (*task)->ExecuteTaskSync(task, &senseData, &taskStatus,							    &transferCount);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Executing Task");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Get information
     if (taskStatus == kSCSITaskStatus_GOOD) {
          for (index = 8; index < 16; index++) {
             if (bufPtr[index] == 0) break;
             (info->vendorID)[index-8] = bufPtr[index];
-            }
+        }
         (info->vendorID)[index-8] = 0;
         blank_trim(info->vendorID);
 			
         for (index = 16; index < 32; index++) {
             if (bufPtr[index] == 0) break;
             (info->productID)[index-16] = bufPtr[index];
-            }
+        }
         (info-> productID)[index-16] = 0;
         blank_trim(info->productID);
 			
         for (index = 32; index < 36; index++) {
             if (bufPtr[index] == 0) break;
             (info->firmwareRevLevel)[index-32] = bufPtr[index];
-            }
+        }
         (info->firmwareRevLevel)[index-32] = 0;
         blank_trim(info->firmwareRevLevel);
 
         result = 0;
-        }
+    }
     else {
         result = -1;
-        }
+    }
 		
     // Be a good citizen and cleanup
     free (range);
@@ -373,7 +373,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
 				
     // Zero the buffer.
     memset(senseResult, 0, sizeof(senseResult));
@@ -384,7 +384,7 @@
     if ( range == NULL ) {
         sprintf(errmsg, "ERROR Mallocing IOVirtualRange");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // zero the senseData and CDB
     memset(&senseData, 0, sizeof (senseData));
@@ -404,7 +404,7 @@
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the scatter-gather entry in the task
     err = (*task)->SetScatterGatherEntries(task, range, 1,
@@ -413,21 +413,21 @@
     if  (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting SG Entries");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the timeout in the task
     err = (*task)->SetTimeoutDuration(task, 10000);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Send it!
     err =  (*task)->ExecuteTaskSync(task, &senseData, &taskStatus,							    &transferCount);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Executing Task");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Get information
     result = -1;
@@ -437,13 +437,13 @@
             if (senseResult[4] == 0x80) {
                 *current_mode = AUDIO_MODE;
                 result = 0;
-                }
+            }
             else if (senseResult[4] == 0x13) {
                 *current_mode = DATA_MODE;
                 result = 0;
-                }
             }
         }
+    }
 		
     // Be a good citizen and cleanup
     free (range);
@@ -487,15 +487,15 @@
     // check mode is valid
     if ((mode_wanted != DATA_MODE) && (mode_wanted != AUDIO_MODE)) {
         return -1;
-        }
+    }
 
     // set data for mode wanted
     if (mode_wanted == DATA_MODE) {
         mode_setting[4] = 0x13;
-        }
+    }
     else {
         mode_setting[4] = 0x80;
-        }
+    }
 
     // Create a task now that we have exclusive access
     task = (*interface)->CreateSCSITask(interface);
@@ -503,7 +503,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
 				
     // Allocate a virtual range for the buffer. If we had more than 1 scatter-gather entry,
     // we would allocate more than 1 IOVirtualRange.
@@ -511,7 +511,7 @@
     if ( range == NULL ) {
         sprintf(errmsg, "ERROR Mallocing IOVirtualRange");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // zero the senseData and CDB
     memset(&senseData, 0, sizeof (senseData));
@@ -531,7 +531,7 @@
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the scatter-gather entry in the task
     err = (*task)->SetScatterGatherEntries(task, range, 1,
@@ -540,29 +540,29 @@
     if  (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting SG Entries");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the timeout in the task
     err = (*task)->SetTimeoutDuration(task, 10000);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Send it!
     err =  (*task)->ExecuteTaskSync(task, &senseData, &taskStatus,							    &transferCount);
     if (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Executing Task");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Get information
     result = -1;
     if (taskStatus == kSCSITaskStatus_GOOD) {
         if (transferCount == 12) {
             result = 0;
-            }
         }
+    }
 		
     // Be a good citizen and cleanup
     free (range);
@@ -571,7 +571,7 @@
     (*task)->Release(task);
 
     return result;
-    }
+}
 
 - (int) loadUnload:(Boolean)do_unload
             withCallback:(SCSITaskCallbackFunction)the_callback {
@@ -587,7 +587,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
     
 
     // define the cdb
@@ -600,14 +600,14 @@
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the timeout in the task
     err = ( *task )->SetTimeoutDuration ( task, 300000 );
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the callback
     err = (*task)->SetTaskCompletionCallback(task, the_callback, task);
@@ -616,7 +616,7 @@
         [self writeToLog:errmsg];
         ( *task )->Release ( task );
         return -1;
-        }
+    }
 
     // Send it!
     err = ( *task )->ExecuteTaskAsync ( task );
@@ -625,7 +625,7 @@
         [self writeToLog:errmsg];
         ( *task )->Release ( task );
         return -1;
-        }
+    }
 				
     return 0;
 }
@@ -645,7 +645,7 @@
         sprintf(errmsg, "CreateSCSITask failed");
         [self writeToLog:errmsg];
         return -1;
-        }
+    }
     
     // Allocate a virtual range for the buffer. If we had more than 1 scatter-gather entry,
     // we would allocate more than 1 IOVirtualRange.
@@ -667,7 +667,7 @@
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting CDB");
         [self writeToLog:errmsg];
-        }
+    }
 		
     // Set the scatter-gather entry in the task
     err = (*task)->SetScatterGatherEntries(task, range, 1,
@@ -676,14 +676,14 @@
     if  (err != kIOReturnSuccess) {
         sprintf(errmsg, "ERROR Setting SG Entries");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the timeout in the task
     err = ( *task )->SetTimeoutDuration ( task, 10000 );
     if ( err != kIOReturnSuccess ) {
         sprintf(errmsg, "ERROR Setting Timeout");
         [self writeToLog:errmsg];
-        }
+    }
 
     // Set the callback
     err = (*task)->SetTaskCompletionCallback(task, the_callback, task);
@@ -692,7 +692,7 @@
         [self writeToLog:errmsg];
         ( *task )->Release ( task );
         return -1;
-        }
+    }
 
     // Send it!
     err = ( *task )->ExecuteTaskAsync ( task );
@@ -701,7 +701,7 @@
         [self writeToLog:errmsg];
         ( *task )->Release ( task );
         return -1;
-        }
+    }
 				
     return 0;
 }
@@ -718,11 +718,11 @@ void blank_trim(char *text)   // used by Inquiry
     for (i = (len - 1); i >= 0; i--) {
         if (text[i] == ' ') {
             text[i] = 0;
-            }
+        }
         else {
             break;
-            }
         }
+    }
 }
 
 void
@@ -1166,4 +1166,3 @@ get_sense_string(char *str, UInt8 key, UInt8 ASC, UInt8 ASCQ,
 			break;
 	}	
 }
-

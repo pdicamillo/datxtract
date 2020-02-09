@@ -20,7 +20,7 @@ typedef struct DriveInfo {
     char	vendorID[9];
     char	productID[17];
     char	firmwareRevLevel[5];
-    } DriveInfo;
+} DriveInfo;
 
 void blank_trim(char *);
 void get_sense_string(char *str, UInt8 key, UInt8 ASC, UInt8 ASCQ,

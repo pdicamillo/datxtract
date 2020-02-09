@@ -18,9 +18,9 @@
 {
     if ([theEvent type] == NSApplicationDefined) {
         [myController handleCustomEvent:theEvent];
-        }
+    }
     else {
         [super sendEvent:theEvent];
-        }
+    }
 }
 @end
