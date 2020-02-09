@@ -1,0 +1,59 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                eject = id; 
+                "inserting_checkbox" = id; 
+                pause = id; 
+                prefClose = id; 
+                prefDefaults = id; 
+                prefErrorLimit = id; 
+                prefIncludeError = id; 
+                prefProgFiles = id; 
+                prefProgStart = id; 
+                prefWriteLog = id; 
+                prefWriteMetadata = id; 
+                preferences = id; 
+                read = id; 
+                resume = id; 
+                rewind = id; 
+                stop = id; 
+            }; 
+            CLASS = DATController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                attrText = NSTextField; 
+                currentErrorLimit = NSTextField; 
+                currentFileForProg = NSTextField; 
+                currentIncludeError = NSTextField; 
+                currentProgStart = NSTextField; 
+                currentWriteLog = NSTextField; 
+                currentWriteMetadata = NSTextField; 
+                driveInfo = NSTextField; 
+                driveStatus = NSTextField; 
+                ejectButton = NSButton; 
+                errorText = NSTextField; 
+                fileDurationText = NSTextField; 
+                filenameText = NSTextField; 
+                insertingTapeCheckbox = NSButton; 
+                logText = NSTextView; 
+                pauseButton = NSButton; 
+                prefsErrorLimit = NSTextField; 
+                prefsFileForProg = NSButton; 
+                prefsIncludeError = NSButton; 
+                prefsProgStart = NSButton; 
+                prefsWindow = NSWindow; 
+                prefsWriteLog = NSButton; 
+                prefsWriteMetadata = NSButton; 
+                readButton = NSButton; 
+                resumeButton = NSButton; 
+                rewindButton = NSButton; 
+                stopButton = NSButton; 
+                timeText = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,14 @@
+/* DATXtract - an application for reading audio DAT tapes
+
+   Copyright © 2002-2007 Peter DiCamillo
+
+   This code is distributed under the license specified by the COPYING file
+   at the top-level directory of this distribution.                         */
+
+//
+// Prefix header for all source files of the 'test' target in the 'test' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

@@ -1,0 +1,25 @@
+<!-- DATXtract - an application for reading audio DAT tapes
+
+   Copyright © 2002-2007 Peter DiCamillo
+
+   This code is distributed under the license specified by the COPYING file
+   at the top-level directory of this distribution.                         -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ReadAtProgramStart</key>
+	<false/>
+	<key>FileForEachProgram</key>
+	<false/>
+	<key>IncludeErrorFrames</key>
+	<false/>
+	<key>ErrorLimit</key>
+	<integer>15</integer>
+	<key>WriteMetadata</key>
+	<true/>
+	<key>WriteLog</key>
+	<true/>
+</dict>
+</plist>
