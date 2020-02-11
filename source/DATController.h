@@ -64,7 +64,7 @@ void load_callback(SCSIServiceResponse serviceResponse,
                    SCSITaskStatus taskStatus,
                    UInt64 bytesTransferred,
                    void *refcon);
-                
+
 extern SCSIServiceResponse loadResponse;
 extern SCSITaskStatus loadStatus;
 extern UInt64 loadCount;
@@ -78,10 +78,10 @@ extern SCSIServiceResponse readResponse;
 extern SCSITaskStatus readStatus;
 extern UInt64 readCount;
 
-#define LOAD_EVENT_SUBTYPE	1
-#define READ_EVENT_SUBTYPE	2
-#define UNLOAD_EVENT_SUBTYPE	3
-#define DEFAULT_ERROR_LIMIT	15
+#define LOAD_EVENT_SUBTYPE  1
+#define READ_EVENT_SUBTYPE  2
+#define UNLOAD_EVENT_SUBTYPE    3
+#define DEFAULT_ERROR_LIMIT 15
 
 void convert_2_bsd(Boolean *is_numeric,
                    unsigned char *result_val,
@@ -95,7 +95,7 @@ void convert_3_bsd(Boolean *is_numeric,
                    unsigned char msd,
                    unsigned char nsd,
                    unsigned char lsd);
-                   
+
 unsigned long get_ptime_offset(FrameInfo *fi);
 void set_ptime_display(FrameInfo *fi, unsigned long offset);
 void get_display_time(unsigned long secs_result, unsigned char frames,
@@ -130,7 +130,7 @@ char * safe_strcat(char *dest, const char *src, int len);
     IBOutlet NSTextField *currentErrorLimit;
     IBOutlet NSTextField *currentWriteMetadata;
     IBOutlet NSTextField *currentWriteLog;
-	IBOutlet NSWindow *prefsWindow;
+    IBOutlet NSWindow *prefsWindow;
     IBOutlet NSButton *prefsProgStart;
     IBOutlet NSButton *prefsFileForProg;
     IBOutlet NSButton *prefsIncludeError;
@@ -151,14 +151,14 @@ char * safe_strcat(char *dest, const char *src, int len);
     Boolean pause_requested;
     Boolean have_data_handle;
     Boolean have_info_handle;
-	Boolean have_log_handle;
-	Boolean log_file_open;
+    Boolean have_log_handle;
+    Boolean log_file_open;
     int read_error_count_left;
     int read_error_count_right;
     int read_error_count_frames;
     NSTimer *statusTimer;
     unsigned char readBuffer[DAT_FRAME_SIZE];
-	unsigned char writeBuffer[1920 * 4];
+    unsigned char writeBuffer[1920 * 4];
     char file_path[128];
     char file_name[64];
     char file_extension[64];
@@ -166,30 +166,30 @@ char * safe_strcat(char *dest, const char *src, int len);
     char datapath[268];
     NSFileHandle *datafile;
     NSFileHandle *infofile;
-	NSFileHandle *logfile;
+    NSFileHandle *logfile;
     NSString * dataFileString;
     NSString * infoFileString;
-	NSString * logFileString;
-    unsigned char *ah;		// AIFF header
+    NSString * logFileString;
+    unsigned char *ah;      // AIFF header
     unsigned long expected_frame;
     unsigned long samples_written;
     unsigned long frames_read;
     unsigned long frames_written;
     unsigned char file_sample_rate;
-	unsigned char file_quantization;
+    unsigned char file_quantization;
     int file_error_count;
     int adjusted_file_error_count;
     Boolean errors_exceeded;
     Boolean wait_for_prog;
-	FrameInfo file_end_info;
+    FrameInfo file_end_info;
 
-	// settings variables
-	Boolean readAtProgramStart;
-	Boolean fileForEachProgram;
-	Boolean includeErrorFrames;
-	int errorLimit;
-	Boolean writeMetadata;
-	Boolean writeLog;
+    // settings variables
+    Boolean readAtProgramStart;
+    Boolean fileForEachProgram;
+    Boolean includeErrorFrames;
+    int errorLimit;
+    Boolean writeMetadata;
+    Boolean writeLog;
 }
 
 #define READ_AT_PROGRAM_START_KEY "ReadAtProgramStart"

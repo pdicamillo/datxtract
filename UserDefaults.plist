@@ -9,17 +9,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ReadAtProgramStart</key>
-	<false/>
-	<key>FileForEachProgram</key>
-	<false/>
-	<key>IncludeErrorFrames</key>
-	<false/>
-	<key>ErrorLimit</key>
-	<integer>15</integer>
-	<key>WriteMetadata</key>
-	<true/>
-	<key>WriteLog</key>
-	<true/>
+    <key>ReadAtProgramStart</key>
+    <false/>
+    <key>FileForEachProgram</key>
+    <false/>
+    <key>IncludeErrorFrames</key>
+    <false/>
+    <key>ErrorLimit</key>
+    <integer>15</integer>
+    <key>WriteMetadata</key>
+    <true/>
+    <key>WriteLog</key>
+    <true/>
 </dict>
 </plist>
