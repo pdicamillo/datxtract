@@ -77,13 +77,13 @@
         [[logText string] length], 0) withString:
         [[NSCalendarDate calendarDate]
         descriptionWithCalendarFormat:@"%b %d, %Y %H:%M:%S"]];
-    
+
 // create our tape drive object
     theDrive = [[DATDrive alloc] init];
 
 // allow drive object to write to our log
     [theDrive setOwnerObject:self];
-    
+
 // tell app object about us for custom event
     [(DATApplication *)NSApp setMyController:self];
 
@@ -93,7 +93,7 @@
     statusInvocation = [NSInvocation invocationWithMethodSignature:aSignature];
     [statusInvocation setSelector:theSelector];
     [statusInvocation setTarget:self];
-    
+
 // invoke now to get started
     [statusInvocation invoke];
 
@@ -107,7 +107,7 @@
 - (void) updateDriveStatus {
 
     Boolean new_drive_ready;
-    
+
     if (stop_timer) return;
     [self do_updateDriveStatus:&new_drive_ready];
     if (new_drive_ready != drive_ready) {
@@ -145,7 +145,7 @@
         need_drive_info = true;
         return;
     }
-    
+
 	if ([insertingTapeCheckbox state] > 0) {
         [driveStatus setStringValue:@"Inserting tape set"];
 		[theDrive releaseInterface];
@@ -191,7 +191,7 @@
             [driveStatus setStringValue:@"Loading tape"];
         }
         else {
-            infostring = [[NSString alloc] initWithCString:statustext]; 
+            infostring = [[NSString alloc] initWithCString:statustext];
             [driveStatus setStringValue:infostring];
             [infostring release];
         }
@@ -222,7 +222,7 @@
                 strcat(infomsg, theInfo.firmwareRevLevel);
                 need_drive_info = false;
             }
-            infostring = [[NSString alloc] initWithCString:infomsg]; 
+            infostring = [[NSString alloc] initWithCString:infomsg];
             [driveInfo setStringValue:infostring];
             [infostring release];
         }
@@ -230,13 +230,13 @@
             [driveStatus setStringValue:@"Error getting drive info"];
         }
     }
-        
+
     [theDrive releaseInterface];
 }
 
 
 - (void) handleCustomEvent:(NSEvent *)theEvent {
- 
+
    // subtype 1 is finished tape load
    if ([theEvent subtype] == LOAD_EVENT_SUBTYPE) {
         [self endLoad];
@@ -257,7 +257,7 @@
 - (void) writeToLog:(char *)logtext {
 
     NSString *logstring = [[NSString alloc] initWithCString:logtext];
-    
+
     [logText replaceCharactersInRange:NSMakeRange(
         [[logText string] length], 0) withString:@"\n"];
 
@@ -303,7 +303,7 @@
         stop_timer = false;
         return;
     }
-    
+
     // set audio mode
     result = [self setAudioMode:&did_load];
     if (result != 0) {
@@ -372,7 +372,7 @@
     int mode;
 
     *did_load = false;
-    
+
     // check for audio mode
     result = [theDrive getMyMode:&mode];
     if (result != 0) {
@@ -381,10 +381,10 @@
     }
 
     if (mode == AUDIO_MODE) return 0;
-    
+
     // set audio mode and load tape
     // set mode
-    result = [theDrive setMyMode:AUDIO_MODE];    
+    result = [theDrive setMyMode:AUDIO_MODE];
     if (result != 0) {
         [self writeToLog:"Unable to set drive mode"];
         return result;
@@ -420,7 +420,7 @@
 - (void) endRead
 {
     Boolean read_failure = false;
-    
+
     if (readStatus != kSCSITaskStatus_GOOD) {
         [self writeToLog:"Read failed"];
         [theDrive releaseInterface];
@@ -435,20 +435,20 @@
         stop_timer = false;
         read_failure = true;
     }
-    
+
     // never called processing routine
     if (first_frame && read_failure) {
         first_frame = false;
         return;
     }
-    
+
     if (reading_position) {
         [self newPositionRead:read_failure];
     }
     else {
         [self newDataRead:read_failure];
     }
-    
+
     first_frame = false;
 }
 
@@ -496,7 +496,7 @@
     [self getFrameInfo:&fi withFirst:first_frame];
     [self displayFrameInfo:&fi];
 
-    if ((fi.interpolate_flags == 0) && 
+    if ((fi.interpolate_flags == 0) &&
         (strcmp(fi.pnum_text, "0BB") != 0)
         && ((fi.quantization == 0) ||
 			(fi.quantization == 1))) {
@@ -678,7 +678,7 @@
     static char current_pnum_text[5];
     static char current_index_text[3];
     static unsigned long ptime_offset;
-    
+
     if (first) {
         have_current_pnum = false;
         have_current_index = false;
@@ -698,30 +698,30 @@
     d = readBuffer[5817];
     msd = d >> 4;
     subcode_count = d & 0x0f;
-    
+
     d = readBuffer[5818];
     nsd = d >> 4;
     lsd = d & 0x0f;
     convert_3_bsd(&(fi->have_numeric_pnum),
                   &(fi->program_number), fi->pnum_text,
                   msd, nsd, lsd);
-    
+
     fi->interpolate_flags = readBuffer[5819];
-    
+
     d = readBuffer[5820];
     fi->format_id = d >> 6;
     fi->emphasis = (d & 0x30) >> 4;
     fi->sample_rate = (d & 0x0c) >> 2;
     fi->channels = d & 0x03;
-    
+
     d = readBuffer[5821];
     fi->quantization = d >> 6;
     fi->track_pitch = (d & 0x30) >> 4;
     fi->copy_bits = (d & 0x0c) >> 2;
     fi->pack_bits = d & 0x03;
-    
+
     if (subcode_count == 0) return;
-    
+
     sc = readBuffer + 5760 - 8;
     for (i = 0; i < subcode_count; i++) {
         sc += 8;
@@ -737,7 +737,7 @@
                     convert_2_bsd(&(fi->have_numeric_index),
                                   &(fi->index_num), fi->index_text,
                                   msd, lsd);
-                                   
+
                     d = sc[3];
                     msd = d >> 4;
                     lsd = d & 0x0f;
@@ -794,7 +794,7 @@
                     convert_2_bsd(&(fi->have_numeric_index),
                                   &(fi->index_num), fi->index_text,
                                   msd, lsd);
-                                   
+
                     d = sc[3];
                     msd = d >> 4;
                     lsd = d & 0x0f;
@@ -851,7 +851,7 @@
                     convert_2_bsd(&(fi->have_numeric_index),
                                   &(fi->index_num), fi->index_text,
                                   msd, lsd);
-                                   
+
                     d = sc[3];
                     msd = d >> 4;
                     lsd = d & 0x0f;
@@ -978,7 +978,7 @@
         strcpy(fi->index_text, "--");
         strcpy(fi->index_display_text, "--");
     }
-    
+
     if (fi->have_numeric_pnum) {
         strcpy(fi->pnum_display_text, fi->pnum_text);
         if (!fi->priority_id) strcat(fi->pnum_display_text, "?");
@@ -1028,7 +1028,7 @@
         strcpy(fi->ptime_text, "--:--:--.--");
         strcpy(fi->ptime_display_text, "--:--:--.--");
     }
-    
+
     if (!fi->have_absolute_time) {
         strcpy(fi->atime_text, "--:--:--.--");
     }
@@ -1227,21 +1227,21 @@
     NSSavePanel *sp;
     int runResult;
     NSString *tstring;
-    
+
     // create or get the shared instance of NSSavePanel
     sp = [NSSavePanel savePanel];
-    
+
     // customize
     [sp setTitle:@"Save/Replace Numbered Files"];
-    
+
     // display
     runResult = [sp runModal];
-    
+
     // check for ok
     if (runResult != NSOKButton) {
         return false;
     }
-    
+
     // save path and name
     file_extension[0] = 0;
     safe_strcat(file_extension, [[[sp filename] pathExtension] cString], 128);
@@ -1259,7 +1259,7 @@
     file_counter = 0;
 
     return true;
-}    
+}
 
 
 - (Boolean) getNewFileHandles
@@ -1356,7 +1356,7 @@
                     nil];
     dataPathString = [NSString stringWithCString:datapath];
     [manager changeFileAttributes:dictionary atPath:dataPathString];
- 
+
 	if (writeMetadata) {
 		fileType = [NSNumber numberWithUnsignedLong:'TEXT'];
 		fileCreator = [NSNumber numberWithUnsignedLong:'ttxt'];
@@ -1466,7 +1466,7 @@
     *(unsigned long *)(ah+16) = 18;	// commsize (18)
     *(unsigned short *)(ah+20) = 2;	// channels
     *(unsigned long *)(ah+22) = 0;	// samplecount - sample size / 4
-    *(unsigned short *)(ah+26) = 16;	// samplebits    
+    *(unsigned short *)(ah+26) = 16;	// samplebits
     switch(fi->sample_rate) {		// samplefreq, IEEE extended
         case 0:
                 memcpy(ah+28, freq48k, 4);
@@ -1501,7 +1501,7 @@
     if (!writeOK) {
         return 1;
     }
-        
+
     // initialize variables
     expected_frame = 0;
     samples_written = 0;
@@ -1515,7 +1515,7 @@
 
     // display filename
     [filenameText setStringValue:dataFileString];
-    
+
     // log start
     [logText replaceCharactersInRange:NSMakeRange(
         [[logText string] length], 0) withString:@"\nOpening file: "];
@@ -1650,7 +1650,7 @@
 	unsigned char *writePtr;
 	short *unpackPtr;
 	int x0, x1, x2;
-    
+
     result = 0;
     have_error = have_frame_error = false;
 	frames_read++;
@@ -1753,7 +1753,7 @@
     // handle sample rate or quantization mismatch
     if ((fi->sample_rate != file_sample_rate) ||
 		(fi->quantization != file_quantization)) {
- 
+
 		// report mismatch
 		frames_to_time(frames_written, &secs_result, &frames,
 					   file_quantization);
@@ -1807,7 +1807,7 @@
 				quantization_to_use = 1;
 			}
 		}
- 
+
 		// check for error
 		have_error = (sample_rate_to_use != file_sample_rate) ||
 					 (quantization_to_use != file_quantization);
@@ -1847,12 +1847,12 @@
 			*(writePtr++) = sample[1];
 			*(writePtr++) = sample[0];
 			*(writePtr++) = sample[3];
-			*(writePtr++) = sample[2]; 
+			*(writePtr++) = sample[2];
 			sample += 4;
 		}
 	}
 
-    else {					// 32K LP mode 
+    else {					// 32K LP mode
 		unpackPtr = (short *)writeBuffer;
 		for (i = 0; i < 5760; i += 3) {
 			x0 = readBuffer[translate_lp_frame_index[i]];
@@ -1900,7 +1900,7 @@
     if (frames_written == 1) {
         [self writeToLog:"Writing audio data started"];
     }
-        
+
     // display frames written as time
 display:
     // check if errors exceeded
@@ -2472,10 +2472,10 @@ void convert_2_bsd(Boolean *is_numeric,
 
     *is_numeric = ((msd <= 9) && (lsd <= 9));
     *result_val = 0;
-    
+
     if (msd <= 9) {
         *result_val = msd * 10;
-        result_text[0] = msd + 48; 
+        result_text[0] = msd + 48;
     }
     else {
         result_text[0] = msd + 55;
@@ -2484,7 +2484,7 @@ void convert_2_bsd(Boolean *is_numeric,
 
     if (lsd <= 9) {
         *result_val += lsd;
-        result_text[1] = lsd + 48; 
+        result_text[1] = lsd + 48;
     }
     else {
         result_text[1] = lsd + 55;
@@ -2503,10 +2503,10 @@ void convert_3_bsd(Boolean *is_numeric,
 
     *is_numeric = ((msd <= 9) && (nsd <= 9) && (lsd <= 9));
     *result_val = 0;
-    
+
     if (msd <= 9) {
         *result_val = msd * 100;
-        result_text[0] = msd + 48; 
+        result_text[0] = msd + 48;
     }
     else {
         result_text[0] = msd + 55;
@@ -2514,7 +2514,7 @@ void convert_3_bsd(Boolean *is_numeric,
 
     if (nsd <= 9) {
         *result_val += nsd * 10;
-        result_text[1] = nsd + 48; 
+        result_text[1] = nsd + 48;
     }
     else {
         result_text[1] = nsd + 55;
@@ -2522,7 +2522,7 @@ void convert_3_bsd(Boolean *is_numeric,
 
     if (lsd <= 9) {
         *result_val += lsd;
-        result_text[2] = lsd + 48; 
+        result_text[2] = lsd + 48;
     }
     else {
         result_text[2] = lsd + 55;
@@ -2543,7 +2543,7 @@ unsigned long get_ptime_offset(FrameInfo *fi) {
 
     return(aframes - pframes);
 }
-    
+
 void set_ptime_display(FrameInfo *fi, unsigned long offset) {
 
     unsigned long aframes;
@@ -2554,7 +2554,7 @@ void set_ptime_display(FrameInfo *fi, unsigned long offset) {
     aframes = secs_to_frames(fi->atime_secs);
     aframes += fi->atime_frames;
     pframes = aframes - offset;
-    
+
     frames_to_time(pframes, &secs_result, &frames, fi->quantization);
     get_display_time(secs_result, frames, fi->ptime_display_text);
 }
@@ -2579,21 +2579,21 @@ void get_display_time(unsigned long secs_result, unsigned char frames,
 unsigned long secs_to_frames(unsigned long secs) {
 
     unsigned long result;
-    
+
     result = (secs / 3) * 100;
-    
+
     switch (secs % 3) {
         case 0:
                 break;
-                
+
         case 1:
                 result += 33;
                 break;
-                
+
         case 2:
                 result += 66;
                 break;
-                
+
         default:
                 break;
     }
@@ -2618,7 +2618,7 @@ void frames_to_time(unsigned long in_frames, unsigned long *secs,
 	x = adj_frames / 100;
 	*secs = x * 3;
 	rframes = adj_frames - (x * 100);
-    
+
 	if (rframes < 33) {
 		*frames = rframes;
 	}
@@ -2670,17 +2670,17 @@ char * safe_strcat(char *dest, const char *src, int len)
     // len = declared length of dest
     // strcat which appends only as much as fits
     int src_len, dest_len, copylen;
-    
+
     if (src == 0) return dest;	// no src string
     src_len = strlen(src);
     if (src_len == 0) return dest; // nothing to copy
-    
+
     dest_len = strlen(dest);
     copylen = len - 1 - dest_len;
     if (copylen <= 0) return dest; // already no room
-    
+
     if (copylen > src_len) copylen = src_len;  // no longer than source
-    
+
     memcpy(dest + dest_len, src, copylen);
     dest[dest_len + copylen] = 0;
 

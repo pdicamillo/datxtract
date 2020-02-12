@@ -62,7 +62,7 @@
 	
     // get the service we want
     drive_service = IOServiceGetMatchingService(masterPort, matchingDict);
-    
+
     // Now done with the master_port
     mach_port_deallocate ( mach_task_self ( ), masterPort );
     masterPort = 0;
@@ -160,7 +160,7 @@
 	}
 }
 
-- (int) TestUnitReady:(int *)status withString:(char *)status_string 
+- (int) TestUnitReady:(int *)status withString:(char *)status_string
             withKey:(UInt8 *)result_key withCode:(UInt16 *)result_code {
     SCSITaskStatus		taskStatus;
     SCSI_Sense_Data		senseData;
@@ -185,7 +185,7 @@
         [self writeToLog:errmsg];
         return -1;
     }
-    
+
     // zero the senseData and CDB
     memset ( &senseData, 0, sizeof ( senseData ) );
     memset ( cdb, 0, sizeof ( cdb ) );
@@ -217,7 +217,7 @@
     }
 				
     *status = taskStatus;
-    
+
     // Task status is not GOOD, return  any sense string if they apply.
     if ( taskStatus == kSCSITaskStatus_GOOD ) {
         strcpy(status_string, "Ready");
@@ -483,7 +483,7 @@
     IOVirtualRange *			range = NULL;
     char				errmsg[128];
     int					result;
-    
+
     // check mode is valid
     if ((mode_wanted != DATA_MODE) && (mode_wanted != AUDIO_MODE)) {
         return -1;
@@ -588,7 +588,7 @@
         [self writeToLog:errmsg];
         return -1;
     }
-    
+
 
     // define the cdb
     memset(cdb, 0, sizeof(SCSICommandDescriptorBlock));
@@ -629,7 +629,7 @@
 				
     return 0;
 }
-    
+
 - (int) readWithBuffer:(unsigned char *)buff
             withCallback:(SCSITaskCallbackFunction)the_callback
 {
@@ -646,7 +646,7 @@
         [self writeToLog:errmsg];
         return -1;
     }
-    
+
     // Allocate a virtual range for the buffer. If we had more than 1 scatter-gather entry,
     // we would allocate more than 1 IOVirtualRange.
     range = &global_range;
@@ -661,7 +661,7 @@
     cdb[0] = 0x08;
     cdb[3] = DAT_FRAME_SIZE_MSB;
     cdb[4] = DAT_FRAME_SIZE_LSB;
-    
+
     // Set the actual cdb in the task
     err = ( *task )->SetCommandDescriptorBlock ( task, cdb, kSCSICDBSize_6Byte );
     if ( err != kIOReturnSuccess ) {
@@ -712,7 +712,7 @@
 void blank_trim(char *text)   // used by Inquiry
 {
     short i, len;
-    
+
     len = strlen(text);
     if (len == 0) return;
     for (i = (len - 1); i >= 0; i--) {

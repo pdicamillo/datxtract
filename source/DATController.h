@@ -64,7 +64,7 @@ void load_callback(SCSIServiceResponse serviceResponse,
                    SCSITaskStatus taskStatus,
                    UInt64 bytesTransferred,
                    void *refcon);
-                
+
 extern SCSIServiceResponse loadResponse;
 extern SCSITaskStatus loadStatus;
 extern UInt64 loadCount;
@@ -95,7 +95,7 @@ void convert_3_bsd(Boolean *is_numeric,
                    unsigned char msd,
                    unsigned char nsd,
                    unsigned char lsd);
-                   
+
 unsigned long get_ptime_offset(FrameInfo *fi);
 void set_ptime_display(FrameInfo *fi, unsigned long offset);
 void get_display_time(unsigned long secs_result, unsigned char frames,

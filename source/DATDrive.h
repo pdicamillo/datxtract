@@ -14,7 +14,7 @@
 #define AUDIO_MODE 1
 #define DAT_FRAME_SIZE 5822
 #define DAT_FRAME_SIZE_MSB 0x16
-#define DAT_FRAME_SIZE_LSB 0xbe 
+#define DAT_FRAME_SIZE_LSB 0xbe
 
 typedef struct DriveInfo {
     char	vendorID[9];
@@ -40,7 +40,7 @@ void get_sense_string(char *str, UInt8 key, UInt8 ASC, UInt8 ASCQ,
 - (int) locateDrive;
 - (int) setupInterface;
 - (void) releaseInterface;
-- (int) TestUnitReady:(int *)status withString:(char *)status_string 
+- (int) TestUnitReady:(int *)status withString:(char *)status_string
             withKey:(UInt8 *)result_key withCode:(UInt16 *)result_code;
 - (int) Inquiry:(DriveInfo *)info;
 - (int) getMyMode:(int *)current_mode;
